@@ -1,4 +1,4 @@
-## Builiding a Prototype Farm Scanner with AI
+## Builiding a Farm Scanner with AI Prototype
 
 <h2>Farmora</h2>
 
