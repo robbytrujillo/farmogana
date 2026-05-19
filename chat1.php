@@ -11,6 +11,7 @@ $current = basename($_SERVER['PHP_SELF']);
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -25,7 +26,7 @@ $current = basename($_SERVER['PHP_SELF']);
         margin: auto;
         min-height: 100vh;
         padding: 20px;
-        padding-bottom: 110px;
+        padding-bottom: 100px;
     }
 
     .header {
@@ -45,7 +46,7 @@ $current = basename($_SERVER['PHP_SELF']);
         background: white;
         border-radius: 25px;
         padding: 15px;
-        height: 520px;
+        height: 500px;
         overflow-y: auto;
         box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
     }
@@ -56,7 +57,6 @@ $current = basename($_SERVER['PHP_SELF']);
         margin: 10px 0;
         max-width: 80%;
         word-wrap: break-word;
-        font-size: 14px;
     }
 
     .user {
@@ -68,23 +68,6 @@ $current = basename($_SERVER['PHP_SELF']);
     .bot {
         background: #f1f3f5;
         color: #333;
-    }
-
-    .input-wrap {
-        display: flex;
-        gap: 10px;
-        margin-top: 15px;
-    }
-
-    .input-wrap input {
-        border-radius: 30px;
-        padding: 12px 16px;
-    }
-
-    .send-btn {
-        border-radius: 50%;
-        width: 52px;
-        height: 52px;
     }
 
     .bottom-nav {
@@ -108,7 +91,6 @@ $current = basename($_SERVER['PHP_SELF']);
         font-size: 22px;
         color: #8a8a8a;
         text-decoration: none;
-        transition: .25s;
     }
 
     .bottom-nav a.active {
@@ -136,10 +118,11 @@ $current = basename($_SERVER['PHP_SELF']);
             </div>
         </div>
 
-        <div class="input-wrap">
-            <input type="text" id="input" class="form-control" placeholder="Contoh: tomat saya layu">
+        <div class="d-flex gap-2 mt-3">
+            <input type="text" id="input" class="form-control" style="border-radius: 30px;"
+                placeholder="Contoh: tomat saya layu">
 
-            <button class="btn btn-success send-btn" onclick="sendMsg()">
+            <button class="btn btn-success" onclick="sendMsg()" style="border-radius: 30px;">
                 <i class="bi bi-send-fill"></i>
             </button>
         </div>
@@ -172,83 +155,41 @@ $current = basename($_SERVER['PHP_SELF']);
     </div>
 
     <script>
-    const input = document.getElementById("input");
+    function sendMsg() {
 
-    input.addEventListener("keypress", function(e) {
-        if (e.key === "Enter") {
-            sendMsg();
-        }
-    });
-
-    function addMsg(text, type, id = "") {
-        const box = document.getElementById("chatBox");
-
-        box.innerHTML += `
-        <div class="msg ${type}" ${id?`id="${id}"`:''}>
-            ${text}
-        </div>
-    `;
-
-        box.scrollTop = box.scrollHeight;
-    }
-
-    async function sendMsg() {
-
+        const input = document.getElementById("input");
         const text = input.value.trim();
 
         if (!text) return;
 
-        addMsg(text, "user");
+        const box = document.getElementById("chatBox");
+
+        box.innerHTML += `
+        <div class="msg user">${text}</div>
+    `;
+
+        let reply = "Coba jelaskan gejala tanaman lebih detail 🌿";
+
+        if (text.includes("tomat") && text.includes("layu")) {
+            reply = "Tomat layu biasanya karena kekurangan air, akar busuk, atau jamur fusarium.";
+        } else if (text.includes("cabai") && text.includes("layu")) {
+            reply = "Cabai layu bisa disebabkan fusarium, drainase buruk, atau akar rusak.";
+        } else if (text.includes("kuning")) {
+            reply = "Daun kuning biasanya karena kekurangan nitrogen atau terlalu banyak air.";
+        } else if (text.includes("bercak")) {
+            reply = "Bercak daun bisa disebabkan bakteri atau jamur. Kurangi kelembapan.";
+        } else if (text.includes("sehat")) {
+            reply = "Tanaman terlihat sehat 🌱 lanjutkan penyiraman & nutrisi rutin.";
+        }
+
+        setTimeout(() => {
+            box.innerHTML += `
+            <div class="msg bot">${reply}</div>
+        `;
+            box.scrollTop = box.scrollHeight;
+        }, 500);
 
         input.value = "";
-
-        let reply = null;
-
-        // ===== RULE BASED AI =====
-        if (text.includes("tomat") && text.includes("layu")) {
-            reply = "Tomat layu biasanya karena kekurangan air, akar busuk, atau fusarium.";
-        } else if (text.includes("cabai") && text.includes("layu")) {
-            reply = "Cabai layu biasanya karena fusarium atau drainase buruk.";
-        } else if (text.includes("kuning")) {
-            reply = "Daun kuning biasanya karena kekurangan nitrogen atau overwatering.";
-        } else if (text.includes("bercak")) {
-            reply = "Bercak daun sering disebabkan jamur atau bakteri.";
-        } else if (text.includes("sehat")) {
-            reply = "Tanaman terlihat sehat 🌱";
-        }
-
-        // ===== API AI =====
-        else {
-
-            addMsg("Farmogana AI sedang berpikir...", "bot", "loading");
-
-            try {
-
-                const res = await fetch("chat-api.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        message: text
-                    })
-                });
-
-                const data = await res.json();
-
-                document.getElementById("loading").remove();
-
-                reply = data.reply || "Maaf, AI tidak merespon.";
-
-            } catch (e) {
-
-                document.getElementById("loading").remove();
-
-                reply = "Server AI sedang offline.";
-            }
-        }
-
-        addMsg(reply, "bot");
     }
     </script>
 
