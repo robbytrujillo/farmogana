@@ -4,7 +4,7 @@
         <i class="bi bi-house-fill"></i>
     </a>
 
-    <a href="#">
+    <a href="/farmogana/chat.php" class="<?= basename($_SERVER['PHP_SELF'])=='chat.php'?'active':'' ?>">
         <i class="bi bi-chat-dots-fill"></i>
     </a>
 
