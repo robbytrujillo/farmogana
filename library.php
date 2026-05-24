@@ -9,6 +9,8 @@ $current = basename($_SERVER['PHP_SELF']);
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Plant Library</title>
 
+    <link rel="icon" type="image/x-icon" href="/farmogana/assets/images/logo.png">
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 

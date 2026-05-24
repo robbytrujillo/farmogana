@@ -198,7 +198,7 @@
             <i class="bi bi-house-fill"></i>
         </a>
 
-        <a href="#">
+        <a href="chat.php" class="<?= basename($_SERVER['PHP_SELF'])=='chat.php'?'active':'' ?>">
             <i class="bi bi-chat-dots-fill"></i>
         </a>
 
@@ -206,7 +206,7 @@
             <i class="bi bi-camera-fill"></i>
         </a>
 
-        <a href="#">
+        <a href="/farmogana/library.php" class="<?= basename($_SERVER['PHP_SELF'])=='library.php'?'active':'' ?>">
             <i class="bi bi-book-fill"></i>
         </a>
 
