@@ -12,9 +12,10 @@
         <i class="bi bi-camera-fill"></i>
     </a>
 
-    <a href="#">
-        <i class="bi bi-book-fill"></i>
-    </a>
+   <a href="/farmogana/library.php"
+class="<?= basename($_SERVER['PHP_SELF'])=='library.php'?'active':'' ?>">
+    <i class="bi bi-book-fill"></i>
+</a>
 
     <a href="/farmogana/profile.php" class="<?= basename($_SERVER['PHP_SELF'])=='profile.php'?'active':'' ?>">
         <i class="bi bi-person-fill"></i>
