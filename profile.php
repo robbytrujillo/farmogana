@@ -1,5 +1,36 @@
 <?php
 include 'partials/header.php';
+include 'config/db.php';
+
+/*
+|--------------------------------------------------------------------------
+| AMBIL DATA HISTORY
+|--------------------------------------------------------------------------
+*/
+
+$history = mysqli_query($conn, "
+    SELECT * FROM scan_history
+    ORDER BY created_at DESC
+    LIMIT 5
+");
+
+/*
+|--------------------------------------------------------------------------
+| HITUNG STATISTIK
+|--------------------------------------------------------------------------
+*/
+
+$totalScan = mysqli_num_rows(mysqli_query($conn,
+    "SELECT id FROM scan_history"
+));
+
+$totalHealthy = mysqli_num_rows(mysqli_query($conn,
+    "SELECT id FROM scan_history WHERE status='Healthy'"
+));
+
+$totalWarning = mysqli_num_rows(mysqli_query($conn,
+    "SELECT id FROM scan_history WHERE status='Warning'"
+));
 ?>
 
 <div class="app profile-page">
@@ -46,17 +77,17 @@ include 'partials/header.php';
     <div class="card-ui stats-box">
 
         <div>
-            <h4>24</h4>
+            <h4><?= $totalScan ?></h4>
             <small>Total Scan</small>
         </div>
 
         <div>
-            <h4>12</h4>
+            <h4><?= $totalHealthy ?></h4>
             <small>Healthy</small>
         </div>
 
         <div>
-            <h4>4</h4>
+            <h4><?= $totalWarning ?></h4>
             <small>Warning</small>
         </div>
 
@@ -89,37 +120,61 @@ include 'partials/header.php';
     <!-- SCAN HISTORY -->
     <div class="card-ui">
 
-        <h5 class="mb-3">Scan History</h5>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">Scan History</h5>
 
-        <div class="history-item">
-            <strong>Tomat Sakit</strong>
-            <span class="text-warning">Warning</span>
-            <small>11 May 2026 - 15:12 WIB</small>
+            <a href="history.php" class="text-success text-decoration-none">
+                View All
+            </a>
         </div>
 
-        <div class="history-item">
-            <strong>Cabai Sehat</strong>
-            <span class="text-success">Healthy</span>
-            <small>10 May 2026 - 09:41 WIB</small>
-        </div>
+        <?php if(mysqli_num_rows($history) > 0): ?>
+
+        <?php while($row = mysqli_fetch_assoc($history)): ?>
+
+        <?php
+                    $status = $row['status'];
+
+                    if($status == 'Healthy'){
+                        $badge = 'success';
+                    } elseif($status == 'Warning'){
+                        $badge = 'warning';
+                    } else {
+                        $badge = 'danger';
+                    }
+                ?>
 
         <div class="history-item">
-            <strong>Cabai Layu</strong>
-            <span class="text-danger">Critical</span>
-            <small>08 May 2026 - 18:27 WIB</small>
+
+            <div class="d-flex justify-content-between">
+
+                <strong>
+                    <?= $row['tanaman'] ?>
+                </strong>
+
+                <span class="text-<?= $badge ?>">
+                    <?= $status ?>
+                </span>
+
+            </div>
+
+            <small class="text-muted">
+                <?= date('d M Y - H:i', strtotime($row['created_at'])) ?> WIB
+            </small>
+
         </div>
+
+        <?php endwhile; ?>
+
+        <?php else: ?>
+
+        <div class="text-center text-muted py-3">
+            Belum ada history scan
+        </div>
+
+        <?php endif; ?>
 
     </div>
-
-
-    <!-- LOGOUT -->
-    <!-- <div class="card-ui text-center">
-
-        <button class="btn btn-outline-danger w-100">
-            Logout
-        </button>
-
-    </div> -->
 
 </div>
 

@@ -159,3 +159,22 @@ body {
 .profile-page .card-ui:last-child {
   margin-bottom: 10px;
 }
+
+/* Profile */
+.history-item {
+  padding: 14px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-item strong {
+  font-size: 15px;
+}
+
+.history-item small {
+  display: block;
+  margin-top: 4px;
+}
